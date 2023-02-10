@@ -17,9 +17,8 @@ class AuthController extends Controller
             'name' => 'required|string|min:3',
             'birth' => 'required',
             'phone_number' => 'required|unique:users,phone_number',
-            'email' => 'required|email|unique:users',
+            'email' => 'required|email|unique:users,email',
             'password' => 'required|min:6|max:6',
-            'confirm_password' => 'required|same:password'
         ]);
         
         if($validator->fails()){
@@ -69,4 +68,5 @@ class AuthController extends Controller
             'message' => 'logout success'
         ]);
     }
+    
 }
