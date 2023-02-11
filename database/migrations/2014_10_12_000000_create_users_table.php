@@ -21,6 +21,11 @@ return new class extends Migration
             $table->string('phone_number')->unique();
             $table->string('email')->unique();
             $table->string('password');
+            $table->string('bank_name')->nullable();
+            $table->string('no_rekening')->nullable();
+            $table->string('name_account')->nullable();
+            $table->string('id_card')->nullable();
+            $table->string('selfie')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

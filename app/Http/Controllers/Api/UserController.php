@@ -24,7 +24,7 @@ class UserController extends Controller
     public function editProfileImage(Request $request, $id)
     {
         $validator = Validator::make($request->all(),[
-            'image' => 'required|image|mimes:jpeg,png,gif,svg' 
+            'image' => 'required|image|mimes:jpeg,jpg,png,gif,svg' 
         ]);
 
         if($validator->fails()){
@@ -35,14 +35,14 @@ class UserController extends Controller
         }
 
 		$image = $request->file('image');
-		$generate_id = hexdec(uniqid()).'.'.$image->getClientOriginalExtension();
-		Image::make($image)->resize(720, 500)->save('images/'.$generate_id);
+		$fileName = hexdec(uniqid()).'.'.$image->getClientOriginalExtension();
+		Image::make($image)->resize(720, 500)->save('images/'.$fileName);
 
-		$last_img = 'images/'.$generate_id;
+		$path = 'images/'.$fileName;
         
         $user = User::find($id);
         $user->update([
-            'image' => $last_img
+            'image' => $path
         ]);
 
         return response()->json([
@@ -50,7 +50,6 @@ class UserController extends Controller
             'data' => $user
         ]);
     }
-
 
     public function editDataUser(Request $request, $id)
     {
@@ -81,6 +80,75 @@ class UserController extends Controller
             'message' => "Success mengubah data",
             'success' => true
         ]);
+    }
+
+    public function registerBankAccount(Request $request, $id)
+    {
+        $validator = Validator::make($request->all(),[
+            'bank_name' => 'required',
+            'no_rekening' => 'required',
+            'name_account' => 'required',     
+        ]);
+
+        if($validator->fails()){
+            return response()->json([
+                'message' => $validator->errors(),
+                'success' => false
+            ]);
+        }
+        
+        $user = User::find($id);
+        $user->update([
+            'bank_name' => $request->bank_name,
+            'no_rekening' => $request->no_rekening,
+            'name_account' => $request->name_account,
+        ]);
+
+        return response()->json([
+            'Data' => $user,
+            'message' => "Success menambahkan data Bank",
+            'success' => true
+        ]);
+    }
+
+    public function IdCardBank(Request $request, $id){
+        
+        $validator = Validator::make($request->all(),[
+            'id_card' => 'required|image|mimes:jpeg,jpg,png,gif,svg',
+            'selfie' => 'required|image|mimes:jpeg,jpg,png,gif,svg'   
+        ]);
+
+        if($validator->fails()){
+            return response()->json([
+                'message' => $validator->errors(),
+                'success' => false
+            ]);
+        }
+
+        $idCard = $request->file('id_card');
+		$idCardName = hexdec(uniqid()).'.'.$idCard->getClientOriginalExtension();
+		Image::make($idCard)->resize(720, 500)->save('images/id_card/'.$idCardName);
+
+        $selfie = $request->file('selfie');
+        $selfieName = hexdec(uniqid()).'.'.$idCard->getClientOriginalExtension();
+        Image::make($selfie)->resize(550, 720)->save('images/selfie/'.$selfieName);
+
+        
+		$selfiePath = 'images/selfie/'.$selfieName;
+		$cardIdPath = 'images/id_card/'.$idCardName;
+        
+        $user = User::find($id);
+        $user->update([
+            'id_card' => $cardIdPath,
+            'selfie' => $selfiePath
+        ]);
+
+        return response()->json([
+            'message' => 'Success Add Id Card',
+            'data' => $user
+        ]);
+
+
     }
 
 

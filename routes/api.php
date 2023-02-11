@@ -27,5 +27,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::post('/editDataUser/{id}', [UserController::class, 'editDataUser']);
     Route::post('/editProfileImage/{id}', [UserController::class, 'editProfileImage']);
+    Route::post('/registerBank/{id}', [UserController::class, 'registerBankAccount']);
+    Route::post('/idCardBank/{id}', [UserController::class, 'IdCardBank']);
 });
 
