@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -17,6 +18,9 @@ class User extends Authenticatable
      *
      * @var array<int, string>
      */
+
+
+    protected $table = 'users';
     protected $fillable = [
         'name',
         'birth',
@@ -41,6 +45,10 @@ class User extends Authenticatable
         'remember_token',
     ];
 
+
+    const USER_TOKEN = "userToken";
+
+
     /**
      * The attributes that should be cast.
      *
@@ -49,4 +57,13 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+
+    public function chats(): HasMany
+    {
+        return $this->hasMany(Chat::class, 'created_by');
+    } 
+
+
+
 }

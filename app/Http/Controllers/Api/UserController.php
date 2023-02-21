@@ -12,11 +12,11 @@ use Intervention\Image\Facades\Image;
 class UserController extends Controller
 {
 
-    public function show($id)
+    public function index()
     {
-        $user = User::find($id);
+        $user = User::all();
         return response()->json([
-            'message' => 'Success menampilkan data',
+            'message' => 'Sukses Menampilkan semua data',
             'data' => $user
         ]);  
     }
@@ -38,7 +38,8 @@ class UserController extends Controller
 		$fileName = hexdec(uniqid()).'.'.$image->getClientOriginalExtension();
 		Image::make($image)->resize(720, 500)->save('images/'.$fileName);
 
-		$path = 'images/'.$fileName;
+		// $path = 'images/'.$fileName;
+		$path = $fileName;
         
         $user = User::find($id);
         $user->update([
@@ -134,8 +135,10 @@ class UserController extends Controller
         Image::make($selfie)->resize(550, 720)->save('images/selfie/'.$selfieName);
 
         
-		$selfiePath = 'images/selfie/'.$selfieName;
-		$cardIdPath = 'images/id_card/'.$idCardName;
+		// $selfiePath = 'images/selfie/'.$selfieName;
+		$selfiePath = $selfieName;
+		// $cardIdPath = 'images/id_card/'.$idCardName;
+		$cardIdPath = $idCardName;
         
         $user = User::find($id);
         $user->update([
@@ -144,13 +147,22 @@ class UserController extends Controller
         ]);
 
         return response()->json([
-            'message' => 'Success Add Id Card',
+            'message' => 'Sukses menambahkan Id Card',
             'data' => $user
         ]);
-
-
     }
 
+
+    public function getBankAccount($id)
+    {
+        {
+            $user = User::select('bank_name','no_rekening','name_account')->get($id);
+            return response()->json([
+                'message' => 'Success Menampilkan Data Bank User',
+                'data' => $user
+            ]);  
+        }
+    }
 
 }
 
