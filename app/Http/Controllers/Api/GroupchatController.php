@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Js;
 
 class GroupchatController extends Controller
 {
@@ -98,26 +99,36 @@ class GroupchatController extends Controller
         }
         
         $id = Auth::user()->id;        
-        $id_group = GroupChat::where('create_by', $id)->first();
+        $id_group = GroupChat::where('create_by', $id)->first();      
         $user = User::where('phone_number', $request->phone_number)->first();
+        
         if ($user === null) {
           return response()->json([
-            'Message' => 'Nomor ini belum terdaftar!',
+            'Message' => 'Nomor yang anda masukkan belum terdaftar!',
           ]);
-        }else{
-           $phone_number = Member::create([
-                    'id_group' => $id_group->id,
-                    'id_user' => $user->id
-           ]);
-
-           return response()->json([
-            'message' => "Success Add Friend",
-            'data' => $phone_number
-           ]);
-
         }
-        
-    }
 
+        $checkGroup = Member::where([
+          ['id_group','=' ,$id_group->id],
+          ['id_user', '=' ,$user->id]
+        ])->count() > 0;
+
+        if ($checkGroup === true) {
+            return response()->json([
+                'message' => 'Nomor yang anda masukkan sudah di grup' 
+            ]);
+        }else{
+          $phone_number = Member::create([
+            'id_group' => $id_group->id,
+            'id_user' => $user->id
+          ]);
+
+          return response()->json([
+            'message' => "Sukses Mengundang Teman",
+            'data' => $phone_number
+          ]);
+        }
+  
+    }
 
 }
