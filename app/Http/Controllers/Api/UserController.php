@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Intervention\Image\Facades\Image;
@@ -34,22 +35,22 @@ class UserController extends Controller
             ]);
         }
 
-		$image = $request->file('image');
-		$fileName = hexdec(uniqid()).'.'.$image->getClientOriginalExtension();
-		Image::make($image)->resize(720, 500)->save('images/'.$fileName);
+        $image = $request->file('image');
+        $fileName = hexdec(uniqid()).'.'.$image->getClientOriginalExtension();
+        Image::make($image)->resize(720, 500)->save('images/'.$fileName);
 
-		// $path = 'images/'.$fileName;
-		$path = $fileName;
-        
-        $user = User::find($id);
-        $user->update([
-            'image' => $path
-        ]);
+        // $path = 'images/'.$fileName;
+        $path = $fileName;
+            
+            $user = User::find($id);
+            $user->update([
+                'image' => $path
+            ]);
 
-        return response()->json([
-            'message' => 'Success Ubah Gambar',
-            'data' => $user
-        ]);
+            return response()->json([
+                'message' => 'Success Ubah Gambar',
+                'data' => $user
+            ]);
     }
 
     public function editDataUser(Request $request, $id)
@@ -112,7 +113,8 @@ class UserController extends Controller
         ]);
     }
 
-    public function IdCardBank(Request $request, $id){
+    public function IdCardBank(Request $request, $id)
+    {
         
         $validator = Validator::make($request->all(),[
             'id_card' => 'required|image|mimes:jpeg,jpg,png,gif,svg',
@@ -127,18 +129,18 @@ class UserController extends Controller
         }
 
         $idCard = $request->file('id_card');
-		$idCardName = hexdec(uniqid()).'.'.$idCard->getClientOriginalExtension();
-		Image::make($idCard)->resize(720, 500)->save('images/id_card/'.$idCardName);
+        $idCardName = hexdec(uniqid()).'.'.$idCard->getClientOriginalExtension();
+        Image::make($idCard)->resize(720, 500)->save('images/id_card/'.$idCardName);
 
         $selfie = $request->file('selfie');
         $selfieName = hexdec(uniqid()).'.'.$idCard->getClientOriginalExtension();
         Image::make($selfie)->resize(550, 720)->save('images/selfie/'.$selfieName);
 
         
-		// $selfiePath = 'images/selfie/'.$selfieName;
-		$selfiePath = $selfieName;
-		// $cardIdPath = 'images/id_card/'.$idCardName;
-		$cardIdPath = $idCardName;
+        // $selfiePath = 'images/selfie/'.$selfieName;
+        $selfiePath = $selfieName;
+        // $cardIdPath = 'images/id_card/'.$idCardName;
+        $cardIdPath = $idCardName;
         
         $user = User::find($id);
         $user->update([
@@ -153,15 +155,14 @@ class UserController extends Controller
     }
 
 
-    public function getBankAccount($id)
-    {
-        {
-            $user = User::select('bank_name','no_rekening','name_account')->get($id);
+    public function getBankAccount()
+    {       
+            $id = Auth::user()->id;
+            $user = User::select('id','bank_name','no_rekening','name_account')->where('id',$id)->get();
             return response()->json([
                 'message' => 'Success Menampilkan Data Bank User',
                 'data' => $user
             ]);  
-        }
     }
 
 }

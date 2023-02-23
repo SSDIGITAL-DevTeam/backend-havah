@@ -71,7 +71,6 @@ class GroupchatController extends Controller
     // Get member group by id
     public function show($id)
     {   
-        // $id = Auth::user()->id
         $member = DB::table('users')
                 ->join('members', 'id_user', '=', 'users.id')
                 ->select('id_user', 'name', 'email', 'phone_number')

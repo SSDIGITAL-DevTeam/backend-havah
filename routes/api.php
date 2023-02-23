@@ -19,30 +19,32 @@ use App\Http\Controllers\API\UserController;
 */
 
 // Authentication
-Route::post('/register', [AuthController::class, 'register']);
-Route::post('/login', [AuthController::class, 'login']);
-Route::get('/allUser', [UserController::class, 'index']);
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
+Route::post('/register', [AuthController::class, 'register'])->name('register');
+Route::post('/login', [AuthController::class, 'login'])->name('login');
+Route::get('/AllUser', [UserController::class, 'index'])->name('allUser');
 
-// Get all group chat
+// Ambil semua grup yang sudah dibuat
 Route::get('/groupChat', [GroupchatController::class, 'index'])->name('groupChat');
-// Get all member by id group
+
+// Mengambil semua member grup pada id tertentu
 Route::get('/getMember/{id}', [GroupchatController::class, 'show'])->name('getMember');
 
+// Edit Profile
+Route::post('/editDataUser/{id}', [UserController::class, 'editDataUser'])->name('editUser');
+Route::post('/editProfileImage/{id}', [UserController::class, 'editProfileImage'])->name('editImageProfile');
+Route::post('/registerBank/{id}', [UserController::class, 'registerBankAccount'])->name('registerBank');
+Route::post('/idCardBank/{id}', [UserController::class, 'IdCardBank'])->name('createIdCard');
 
 Route::middleware(['auth:sanctum'])->group(function () {
-    Route::post('/logout', [AuthController::class, 'logout']);
-    Route::get('/getBankAccount/{id}', [UserController::class, 'getBankAccount']);
+    Route::get('/user', function(Request $request){
+        return $request->user();
+    });
+    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+    Route::get('/getBankAccount', [UserController::class, 'getBankAccount'])->name('getBankAccount');
     Route::post('/createGroupChat', [GroupchatController::class, 'store'])->name('createChat');
     Route::post('/invite', [GroupchatController::class, 'invite'])->name('invite');
 });
 
-// Edit Profile
-Route::post('/editDataUser/{id}', [UserController::class, 'editDataUser']);
-Route::post('/editProfileImage/{id}', [UserController::class, 'editProfileImage']);
-Route::post('/registerBank/{id}', [UserController::class, 'registerBankAccount']);
-Route::post('/idCardBank/{id}', [UserController::class, 'IdCardBank']);
+
 
 
