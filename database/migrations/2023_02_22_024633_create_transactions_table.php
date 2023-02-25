@@ -20,6 +20,9 @@ return new class extends Migration
             $table->foreignId('id_user')->constrained('users')->cascadeOnDelete();
             $table->timestamp('tgl_transaksi')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->string('nominal');
+            $table->string('transfer_to');
+            $table->string('bukti_transaksi')->nullable();
+            $table->text('deskripsi')->nullable();
             $table->boolean('status')->default(false);
             $table->timestamps();
         });

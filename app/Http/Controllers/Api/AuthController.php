@@ -25,20 +25,17 @@ class AuthController extends Controller
             return response()->json($validator->errors());
         }
 
-        $user = new user;
-        $user->name = trim($request->name);
-        $user->birth = $request->birth;
-        $user->phone_number = $request->phone_number;
-        $user->email = $request->email;
-        $user->password = Hash::make($request->password);
-        $user->save();
+        $user = User::create([
+            'name' => trim($request->name),
+            'birth' => $request->birth,
+            'phone_number' => $request->phone_number,
+            'email' => $request->email,
+            'password' => Hash::make($request->password)
+        ]);
 
-        $token = $user->createToken('auth_token')->plainTextToken;
         return response()->json([
             'message' => 'Anda berhasil terdaftar',
             'data' => $user,
-            'access_token' => $token,
-            'token_type' => 'Bearer'
         ]);
     }
 

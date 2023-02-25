@@ -87,7 +87,8 @@ class GroupchatController extends Controller
     public function invite(Request $request)
     {
         $validator = Validator::make($request->all(),[
-            'phone_number' => 'required' 
+            'phone_number' => 'required',
+            'id_group' => 'required'
         ]);
 
         if($validator->fails()){
@@ -98,13 +99,19 @@ class GroupchatController extends Controller
         }
         
         $id = Auth::user()->id;        
-        $id_group = GroupChat::where('create_by', $id)->first();      
+        $id_group = GroupChat::where('create_by', $id)->first();
         $user = User::where('phone_number', $request->phone_number)->first();
-        
+
         if ($user === null) {
           return response()->json([
-            'Message' => 'Nomor yang anda masukkan belum terdaftar!',
+            'message' => 'Nomor yang anda masukkan belum terdaftar!',
           ]);
+        }
+
+        if($id_group === null){
+            return response()->json([
+                'message' => 'Anda bukan seorang admin!'
+            ]);
         }
 
         $checkGroup = Member::where([
@@ -118,7 +125,7 @@ class GroupchatController extends Controller
             ]);
         }else{
           $phone_number = Member::create([
-            'id_group' => $id_group->id,
+            'id_group' => $request->id_group,
             'id_user' => $user->id
           ]);
 
