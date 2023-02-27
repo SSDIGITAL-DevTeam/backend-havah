@@ -22,7 +22,9 @@ class AuthController extends Controller
         ]);
         
         if($validator->fails()){
-            return response()->json($validator->errors());
+            return response()->json([
+                'message' => $validator->errors()
+            ]);
         }
 
         $user = User::create([
@@ -30,12 +32,15 @@ class AuthController extends Controller
             'birth' => $request->birth,
             'phone_number' => $request->phone_number,
             'email' => $request->email,
-            'password' => Hash::make($request->password)
+            'password' => Hash::make($request->password),
         ]);
 
+        $token = $user->createToken('auth_token')->plainTextToken;
         return response()->json([
             'message' => 'Anda berhasil terdaftar',
-            'data' => $user,
+            'access_token' => $token,
+            'token_type' => 'Bearer',
+            'data_user' => $user,
         ]);
     }
 

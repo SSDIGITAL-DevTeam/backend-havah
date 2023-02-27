@@ -12,9 +12,9 @@ class Chat extends Model
     protected $table = "chats";
     protected $guarded = ['id'];
 
-    public function user() : BelongsTo 
+    public function users() : BelongsTo 
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(User::class, 'id_user');
     }
 
     public function group_chats() : BelongsTo
