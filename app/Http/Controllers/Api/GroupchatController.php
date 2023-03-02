@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\GroupchatRequest;
 use App\Models\GroupChat;
 use App\Models\Member;
 use App\Models\User;
@@ -11,7 +10,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Js;
 
 class GroupchatController extends Controller
 {
@@ -21,11 +19,18 @@ class GroupchatController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {
-        $group = GroupChat::all();
+    {   
+        $id_user = Auth::user()->id;
+        $group = DB::table('members')
+        ->join('users', 'members.id_user', '=', 'users.id')
+        ->join('group_chats', 'members.id_group', '=', 'group_chats.id')
+        ->select('group_chats.id', 'group_chats.create_by', 'group_chats.name_group', 'members.role_id')
+        ->where('members.id_user', '=', $id_user)
+        ->get();
+        
         return response()->json([
             'message' => 'Success get all group chat',
-            'data' => $group
+            'data' => $group,
         ]);
     }
 
@@ -35,7 +40,7 @@ class GroupchatController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function createGroup(Request $request)
     {
         $validator = Validator::make($request->all(),[
             'name_group' => 'required' 

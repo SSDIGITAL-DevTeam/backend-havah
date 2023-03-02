@@ -3,11 +3,10 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
-use App\Http\Controllers\api\ChatController;
-use App\Http\Controllers\api\GroupchatController;
-use App\Http\Controllers\api\MemberController;
-use App\Http\Controllers\api\TransactionController;
-use App\Http\Controllers\API\UserController;
+use App\Http\Controllers\Api\ChatController;
+use App\Http\Controllers\Api\GroupchatController;
+use App\Http\Controllers\Api\TransactionController;
+use App\Http\Controllers\Api\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -49,17 +48,17 @@ Route::middleware(['auth:sanctum'])->group(function () {
     });
     Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
     Route::get('/getBankAccount', [UserController::class, 'getBankAccount'])->name('getBankAccount');
-    Route::post('/createGroupChat', [GroupchatController::class, 'store'])->name('createChat');
+    Route::post('/createGroupChat', [GroupchatController::class, 'createGroup'])->name('createChat');
     Route::post('/invite', [GroupchatController::class, 'invite'])->name('invite');
     
     Route::post('/transaksiHavah', [TransactionController::class, 'addFundHavah']);
-    
-    Route::get('/addFundAdmin', [TransactionController::class, 'addFundAdmin']);
     Route::post('/transaksiAdmin', [TransactionController::class, 'executeFundAdmin']);
     
     // Chat
     Route::get('/chat', [ChatController::class, 'index']);
     Route::post('/sendMessage', [ChatController::class, 'message']);
+    // Ambil semua grup yang sudah dibuat
+    Route::get('/groupChat', [GroupchatController::class, 'index'])->name('groupChat');
     
 });
 
