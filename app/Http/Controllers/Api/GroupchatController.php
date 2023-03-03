@@ -79,7 +79,7 @@ class GroupchatController extends Controller
         $member = DB::table('users')
                 ->join('members', 'id_user', '=', 'users.id')
                 ->select('id_user', 'name', 'email', 'phone_number')
-                ->where('id_group', '=', $id)
+                ->where('members.id_group', '=', $id)
                 ->get();
         return response()->json([
             'Message' => 'Semua Member pada id '. $id,

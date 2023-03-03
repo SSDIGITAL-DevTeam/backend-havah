@@ -18,11 +18,11 @@ return new class extends Migration
             $table->id();
             $table->foreignId('id_group')->constrained('group_chats')->cascadeOnDelete();
             $table->foreignId('id_user')->constrained('users')->cascadeOnDelete();
-            $table->timestamp('tgl_transaksi')->default(DB::raw('CURRENT_TIMESTAMP'));
-            $table->string('nominal');
+            $table->timestamp('transaction_date')->default(DB::raw('CURRENT_TIMESTAMP'));
+            $table->string('saldo');
             $table->string('transfer_to');
-            $table->string('bukti_transaksi')->nullable();
-            $table->text('deskripsi')->nullable();
+            $table->string('transfer_receipt')->nullable();
+            $table->text('description')->nullable();
             $table->boolean('status')->default(false);
             $table->timestamps();
         });

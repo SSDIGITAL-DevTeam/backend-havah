@@ -13,14 +13,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('group_chats', function (Blueprint $table) {
+        Schema::create('polings', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('create_by')->constrained('users')->cascadeOnDelete();
-            $table->string('name_group');
-            $table->string('group_balance')->nullable();
-            $table->string('color_profile')->nullable();
-            $table->integer('approval')->nullable();
-            $table->boolean('fund_storage')->nullable();
+            $table->foreignId('id_chat')->constrained('chats')->cascadeOnDelete();
+            $table->foreignId('id_user')->constrained('users')->cascadeOnDelete();
+            $table->foreignId('id_group')->constrained('group_chats')->cascadeOnDelete();
+            $table->string('subject');
+            $table->json('options');
             $table->timestamps();
         });
     }
@@ -32,6 +31,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('group_chats');
+        Schema::dropIfExists('polings');
     }
 };

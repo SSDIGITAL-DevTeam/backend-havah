@@ -107,9 +107,9 @@ class UserController extends Controller
         ]);
 
         return response()->json([
-            'Data' => $user,
             'message' => "Success menambahkan data Bank",
-            'success' => true
+            'success' => true,
+            'Data' => $user
         ]);
     }
 
@@ -150,6 +150,7 @@ class UserController extends Controller
 
         return response()->json([
             'message' => 'Sukses menambahkan Id Card',
+            'success' => true,
             'data' => $user
         ]);
     }

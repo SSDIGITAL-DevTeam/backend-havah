@@ -27,7 +27,7 @@ class TransactionController extends Controller
     public function addFundHavah(Request $request)
     {
         $validator = Validator::make($request->all(),[
-            'nominal' => 'required',
+            'saldo' => 'required',
         ]);
 
         if($validator->fails()){
@@ -44,7 +44,7 @@ class TransactionController extends Controller
 				$transaction = Transaction::create([
 						'id_group' => $id_group->id_group,
 						'id_user' => $id_user,
-						'nominal' => $request->nominal,
+						'saldo' => $request->saldo,
 						'transfer_to' => $rekeningHavah->no_rekening,
 				]);
 
