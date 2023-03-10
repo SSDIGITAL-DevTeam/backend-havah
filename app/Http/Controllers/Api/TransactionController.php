@@ -117,6 +117,11 @@ class TransactionController extends Controller
 			]);
     }
 
+    public function reimburse(Request $request) {
+      
+
+    }
+
 
 
 

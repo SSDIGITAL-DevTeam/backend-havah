@@ -29,7 +29,8 @@ class ChatController extends Controller
     public function message(Request $request)
     {
         $validator = Validator::make($request->all(),[
-            'message' => 'required|string' 
+            'message' => 'required|string' ,
+            'id_group' => 'required'
         ]);
         
         if($validator->fails()){
@@ -40,14 +41,14 @@ class ChatController extends Controller
         }
         
         $user_id = Auth::user()->id;
-        $member = Member::where('id_user', $user_id)->first();
+        // $member = Member::where('id_user', $user_id)->first();
         // return response()->json([
         //     'group_id' => $member->id_group,
         //     'id_user' => $user_id
         // ]);
 
         $chatMessage = Chat::create([
-            'id_group' => $member->id_group,
+            'id_group' => $request->id_group,
             'id_user' => $user_id,
             'message' => $request->message
         ]);
