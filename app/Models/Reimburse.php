@@ -15,11 +15,17 @@ class Reimburse extends Model
         'transfer_amount',
         'description',
         'approval_due_date',
+        'group_id',
     ];
 
     public function member()
     {
         return $this->belongsTo(Member::class, 'transfer_destination', 'id');
+    }
+
+    public function group()
+    {
+        return $this->belongsTo(GroupChat::class, 'group_id', 'id');
     }
 
 }

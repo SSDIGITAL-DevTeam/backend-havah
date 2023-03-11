@@ -2,18 +2,22 @@
 
 namespace App\Http\Controllers\api;
 
+use App\Http\Controllers\API\ApiController;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\ReimburseResource;
 use App\Models\GroupChat;
 use App\Models\HavahAdmin;
 use App\Models\Member;
+use App\Models\Reimburse;
 use App\Models\Transaction;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 use Intervention\Image\Facades\Image;
 
-class TransactionController extends Controller
+class TransactionController extends ApiController
 {
 
     // Menampilkan no rek perusahaan HAVAH BCA
@@ -118,8 +122,53 @@ class TransactionController extends Controller
     }
 
     public function reimburse(Request $request) {
-      
+      try {
+        $user_auth   = Auth::user();
+        $member_exist = Member::where('id_group',$request->group_id)->where('id', $request->transfer_destination)->first();
+        // dd($member_exist);
+        $group = GroupChat::where('id', $request->group_id)->first();
+        $group_admin = $group->create_by;
+        // dd($group_admin);
+        
+        if ($user_auth->id == $group_admin) {
 
+          $validator = Validator::make($request->all(),[
+              'approval_rate'         => 'required|integer',
+              // 'transfer_destination'  => 'required|exists:members,id',
+              'transfer_destination'  => ['required',Rule::exists('members', 'id')
+              ->where('id_group',$request->group_id),
+              ],
+              'transfer_amount'       => 'required',
+              'description'           => 'required',
+              'approval_due_date'     => 'required',
+              'group_id'              => 'required',
+            ]);
+
+          if($validator->fails()){
+              return response()->json($validator->errors());       
+          }
+
+          $reimburse = Reimburse::create([
+            'approval_rate'         => $request->approval_rate,
+            'transfer_destination'  => $member_exist->id_user,
+            'transfer_amount'       => $request->transfer_amount,
+            'description'           => $request->description,
+            'approval_due_date'     => $request->approval_due_date,
+            'group_id'              => $request->group_id,
+        ]);
+
+        return $this->respondSuccess('Succed', new ReimburseResource($reimburse));
+
+
+        }
+        else {
+          return $this->respondInternalError('Kamu Bukan Admin');
+        }
+      } catch (\Throwable $th) {
+        return $this->respondInternalError($th->getMessage());
+      }
+
+      
     }
 
 

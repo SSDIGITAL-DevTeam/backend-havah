@@ -89,7 +89,8 @@ class GroupchatController extends Controller
 
 
     // Invite friend to group chat
-    public function invite(Request $request)
+    public function invite(Request $request) //! untuk endpoint ini mas rian banyak yang salah di bagian check admin gaboleh cuma first kemudian output ga 
+    //!sesuai coba sesuaikan sama cara pengerjaan validasi dan finding di reimburse kemudian dirapihin gunakan resouce mas untuk ouput kemudian gunakan extend apicontroller yang udah saya masukin
     {
         $validator = Validator::make($request->all(),[
             'phone_number' => 'required',

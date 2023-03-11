@@ -2,6 +2,7 @@
 
 namespace App\Exceptions;
 
+use App\Http\Controllers\API\ApiController;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
 
@@ -45,6 +46,13 @@ class Handler extends ExceptionHandler
     {
         $this->reportable(function (Throwable $e) {
             //
+        });
+
+        $this->renderable(function (\Illuminate\Auth\AuthenticationException $e, $request) {
+            if ($request->is('api/*')) {
+                $api = new ApiController;
+                return $api->respondUnauthorized("Not Authenticated");
+            }
         });
     }
 }

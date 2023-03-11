@@ -15,11 +15,12 @@ return new class extends Migration
     {
         Schema::create('reimburses', function (Blueprint $table) {
             $table->id();
-            $table->string('approval_rate');
+            $table->integer('approval_rate')->unsigned();
             $table->foreignId('transfer_destination')->constrained('members')->onDelete('cascade');
             $table->string('transfer_amount');
             $table->string('description');
             $table->dateTime('approval_due_date');
+            $table->foreignId('group_id')->constrained('group_chats')->onDelete('cascade');
             $table->timestamps();
         });
     }
